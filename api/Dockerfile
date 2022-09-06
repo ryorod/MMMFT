@@ -46,7 +46,7 @@ RUN pip install awslambdaric && \
 FROM python:3.8-slim-buster
 ARG APP_DIR="/home/app/"
 
-COPY app/app.py ${APP_DIR}/app.py
+COPY app/*.py ${APP_DIR}/
 WORKDIR ${APP_DIR}
 COPY --from=builder  /usr/local/lib/python3.8/site-packages /usr/local/lib/python3.8/site-packages/
 ENTRYPOINT [ "/usr/local/bin/python", "-m", "awslambdaric" ]
