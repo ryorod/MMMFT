@@ -1,3 +1,5 @@
+# https://www.medi-08-data-06.work/entry/machine-learning-api
+
 import pickle
 import pandas as pd
 from fastapi import FastAPI
