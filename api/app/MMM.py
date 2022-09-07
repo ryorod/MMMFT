@@ -9,7 +9,8 @@ from IPython.display import display, Javascript
 from js2py import eval_js
 
 class MMM:
-    def __init__(self):
+    def __init__(self, hash: str, isInit: bool = False):
+        self.hash = hash
         self.reset_midi()
         with open('./js/demo.js', 'r') as f:
             self.js = Javascript(f.read())
