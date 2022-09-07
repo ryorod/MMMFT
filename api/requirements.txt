@@ -30,6 +30,7 @@ parso==0.8.3
 pexpect==4.8.0
 pickleshare==0.7.5
 prompt-toolkit==3.0.29
+protobuf==3.12.2
 psutil==5.9.0
 ptyprocess==0.7.0
 pure-eval==0.2.2
@@ -48,6 +49,7 @@ sniffio==1.2.0
 stack-data==0.2.0
 starlette==0.17.1
 threadpoolctl==3.1.0
+torch==1.6.0
 tornado==6.1
 traitlets==5.1.1
 typing_extensions==4.2.0
