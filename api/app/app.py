@@ -27,7 +27,7 @@ async def init():
     ut = str(time.time())
     hash = hashlib.sha256(ut.encode()).hexdigest()
     try:
-        MMM(hash=hash, isInit=True)
+        mmm = MMM(hash=hash, isInit=True)
         return {'hash': hash}
     except:
         return {'message': 'Initialization error.'}
