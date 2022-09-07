@@ -49,7 +49,7 @@ WORKDIR /
 FROM python:3.8-slim-buster
 ARG APP_DIR="/home/app/"
 
-COPY app/*.py ${APP_DIR}
+COPY app/* ${APP_DIR}
 WORKDIR ${APP_DIR}
 COPY --from=builder  /usr/local/lib/python3.8/site-packages /usr/local/lib/python3.8/site-packages/
 ENTRYPOINT [ "/usr/local/bin/python", "-m", "awslambdaric" ]
