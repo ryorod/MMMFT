@@ -3,11 +3,18 @@
 
 FROM python:3.8-buster AS builder
 
+COPY requirements.txt .
+RUN pip install awslambdaric && \
+    pip install -r requirements.txt
+
 WORKDIR /content
 
 # installing dependencies
 RUN apt-get update && \
     apt-get install -y \
+    g++ \
+    make \
+    cmake \
     wget \
     unzip \
     libprotobuf-dev \
@@ -33,15 +40,11 @@ RUN pip install .
 
 # installing python modules
 RUN pip install pyFluidSynth && \
-    apt install fluidsynth && \
+    apt install -y fluidsynth && \
     pip install midi2audio && \
     cp /usr/share/sounds/sf2/FluidR3_GM.sf2 ./font.sf2
 
 WORKDIR /
-
-COPY requirements.txt .
-RUN pip install awslambdaric && \
-    pip install -r requirements.txt
 
 FROM python:3.8-slim-buster
 ARG APP_DIR="/home/app/"
