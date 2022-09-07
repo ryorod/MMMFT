@@ -4,12 +4,17 @@ import re
 import base64
 import json
 import mmm_api as mmm
-
 from midi2audio import FluidSynth
+from IPython.display import display, Javascript
+from js2py import eval_js
 
 class MMM:
     def __init__(self):
         self.reset_midi()
+        with open('./js/demo.js', 'r') as f:
+            self.js = Javascript(f.read())
+        display(self.js)
+        eval_js("start_up()")
 
     def get_current_midi(self):
         with open("current_midi.json", "r") as f:
