@@ -1,6 +1,5 @@
 # https://colab.research.google.com/drive/10ZAdEwHDbL1lVcUGeCdj9FxXnQSNFSH4?usp=sharing
 
-import base64
 from datetime import datetime
 import json
 from typing import List
@@ -151,8 +150,8 @@ class MMM:
         # filename
         all_inst = '-'.join(self.instruments)
         date_time = datetime.now()
-        datetime_num = date_time.year + date_time.month + date_time.day + date_time.hour + date_time.minute + date_time.second
-        filename = all_inst + '__' + str(datetime_num)
+        datetime_num = str(date_time.year) + str(date_time.month) + str(date_time.day) + str(date_time.hour) + str(date_time.minute) + str(date_time.second)
+        filename = all_inst + '__' + datetime_num
 
         # upload .mid
         s3_client.upload_file('current.mid', BUCKET_NAME, f'/{self.hash}/{filename}.mid')
