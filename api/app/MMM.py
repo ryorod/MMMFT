@@ -110,7 +110,7 @@ class MMM:
         self.mix_tracks_in_json(midi_json)
 
         # save the midi
-        self.save_current_midi(midi_json)
+        self.save_current_midi(midi_json, True)
 
     # this should work now basically
     def mix_tracks_in_json(self, midi_json, levels=None):
