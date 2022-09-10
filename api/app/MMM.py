@@ -1,6 +1,7 @@
 # https://colab.research.google.com/drive/10ZAdEwHDbL1lVcUGeCdj9FxXnQSNFSH4?usp=sharing
 
 import base64
+from datetime import datetime
 import json
 from typing import List
 from boto3 import Session
@@ -18,15 +19,13 @@ class MMM:
         with open(MIDI_JSON_FILENAME, "r") as f:
             return json.load(f)
 
-    def save_current_midi(self, midi_json, is_generate: bool = False):
+    def save_current_midi(self, midi_json):
         with open(MIDI_JSON_FILENAME, "w") as f:
             json.dump(midi_json, f)
         sess = Session()
         s3 = sess.client('s3')
-        s3.upload_file(f'/{self.hash}/{MIDI_JSON_FILENAME}', BUCKET_NAME, MIDI_JSON_FILENAME)
-
-        if is_generate and self.instruments:
-            self.save_midi_and_wav(s3)
+        s3.upload_file(MIDI_JSON_FILENAME, BUCKET_NAME, f'/{self.hash}/{MIDI_JSON_FILENAME}')
+        return s3
 
     def generate(self, instruments: List[str]):
         self.instruments = instruments
@@ -110,7 +109,10 @@ class MMM:
         self.mix_tracks_in_json(midi_json)
 
         # save the midi
-        self.save_current_midi(midi_json, True)
+        s3 = self.save_current_midi(midi_json)
+
+        # save .mid and .wav
+        return self.save_midi_and_wav(s3)
 
     # this should work now basically
     def mix_tracks_in_json(self, midi_json, levels=None):
@@ -126,7 +128,6 @@ class MMM:
                         event["velocity"] = audio_level
 
     def save_midi_and_wav(self, s3_client):
-        # TODO: Save .mid and .wav to S3
         status = get_status(instruments=self.instruments)
         midi_json = self.get_current_midi()
         tracks = []
@@ -146,17 +147,21 @@ class MMM:
         bars_to_keep = list(range(status["nbars"]))
         raw = mmm.prune_tracks(raw, tracks, bars_to_keep)
         encoder.json_to_midi(raw, "current.mid")
+
+        # filename
+        all_inst = '-'.join(self.instruments)
+        date_time = datetime.now()
+        datetime_num = date_time.year + date_time.month + date_time.day + date_time.hour + date_time.minute + date_time.second
+        filename = all_inst + '__' + str(datetime_num)
+
+        # upload .mid
+        s3_client.upload_file('current.mid', BUCKET_NAME, f'/{self.hash}/{filename}.mid')
+
+        # upload .wav
         FluidSynth("font.sf2").midi_to_audio('current.mid', 'current.wav')
-  
-        # set the src and play
-        sound = open("current.wav", "rb").read()
-        sound_encoded = base64.b64encode(sound).decode('ascii')
-        script = '''<script type="text/javascript">
-        var audio = document.querySelector("#beep");
-        audio.src = "data:audio/wav;base64,{raw_audio}";
-        audio.play();
-        </script>'''.format(raw_audio=sound_encoded)
-        # display(HTML(script))
+        s3_client.upload_file('current.wav', BUCKET_NAME, f'/{self.hash}/{filename}.wav')
+
+        return filename
 
     def reset_midi(self):
         self.save_current_midi({})

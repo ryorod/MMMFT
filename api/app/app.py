@@ -36,7 +36,8 @@ async def init():
 async def generate(body: Generate):
     try:
         mmm = MMM(hash=body.hash)
-        mmm.generate(instruments=body.instruments)
+        filename = mmm.generate(instruments=body.instruments)
+        return {'hash': body.hash, 'filename': filename}
     except:
         return {'message': 'Failed to generate music.'}
 
