@@ -14,9 +14,11 @@ class MMM:
         self.hash = hash
 
     def get_current_midi(self):
-        # TODO: Get current_midi.json from S3, assert the hash exists in S3
-        with open(MIDI_JSON_FILENAME, "r") as f:
-            return json.load(f)
+        sess = Session()
+        s3 = sess.client('s3')
+        res = s3.get_object(Bucket=BUCKET_NAME, Key=MIDI_JSON_FILENAME)
+        body = res['Body'].read()
+        return json.loads(body.decode('utf-8'))
 
     def save_current_midi(self, midi_json):
         with open(MIDI_JSON_FILENAME, "w") as f:
