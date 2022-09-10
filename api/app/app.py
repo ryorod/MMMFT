@@ -14,9 +14,11 @@ from MMM import MMM
 
 app = FastAPI()
 
-# class Features(BaseModel):
-#     RM:float
-#     AGE:float
+class BaseBody(BaseModel):
+    hash: str
+
+class Generate(BaseBody):
+    instruments: List[str]
 
 @app.get("/health")
 async def get_health():
@@ -27,10 +29,29 @@ async def init():
     ut = str(time.time())
     hash = hashlib.sha256(ut.encode()).hexdigest()
     try:
-        mmm = MMM(hash=hash, isInit=True)
+        mmm = MMM(hash=hash)
+        mmm.reset_midi()
         return {'hash': hash}
     except:
         return {'message': 'Initialization error.'}
+
+
+# @app.post('/add_track')
+# async def add_track(body: BaseBody):
+#     try:
+#         mmm = MMM(hash=body.hash)
+#         mmm.add_new_track()
+#         return {'message': 'SUCCESS'}
+#     except:
+#         return {'message': 'Failed to add a track.'}
+
+@app.post('/generate')
+async def generate(body: Generate):
+    try:
+        mmm = MMM(hash=body.hash)
+        mmm.generate_callback(instruments=body.instruments)
+    except:
+        return {'message': 'Failed to generate music.'}
 
 # @app.post("/predict")
 # async def post_predict(features:List[Features]):

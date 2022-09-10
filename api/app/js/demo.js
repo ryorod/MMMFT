@@ -575,50 +575,50 @@
   function build_track(midi_json) {
     //console.log(density);
     //console.log(TRACK_COUNT);
-    var track_id = TRACK_COUNT.toString();
-    load_template(6, $("#track-container"), "track_" + track_id, "div.track:last");
-    build_track_controls(track_id);
+    // var track_id = TRACK_COUNT.toString();
+    // load_template(6, $("#track-container"), "track_" + track_id, "div.track:last");
+    // build_track_controls(track_id);
 
-    var s = build_pianoroll(midi_json, TRACK_COUNT);
-    $("#track_" + track_id).find(".roll")[0].append(s);
+    // var s = build_pianoroll(midi_json, TRACK_COUNT);
+    // $("#track_" + track_id).find(".roll")[0].append(s);
 
-    update_mdc();
+    // update_mdc();
 
     // set to default value
-    var inst = "acoustic_grand_piano";
-    var density = 5;
-    var min_poly = "any";
-    var max_poly = "any";
-    var min_dur = "any";
-    var max_dur = "any";
+    // var inst = "acoustic_grand_piano";
+    // var density = 5;
+    // var min_poly = "any";
+    // var max_poly = "any";
+    // var min_dur = "any";
+    // var max_dur = "any";
 
-    if (typeof midi_json !== 'undefined') {
-      var isDrum = (midi_json["tracks"][TRACK_COUNT]["trackType"]==11)||(midi_json["tracks"][TRACK_COUNT]["trackType"]=="STANDARD_DRUM_TRACK");
-      var inst_number = midi_json["tracks"][TRACK_COUNT]["instrument"];
-      inst = REV_INST_MAP[inst_number + 128*isDrum];
+    // if (typeof midi_json !== 'undefined') {
+    //   var isDrum = (midi_json["tracks"][TRACK_COUNT]["trackType"]==11)||(midi_json["tracks"][TRACK_COUNT]["trackType"]=="STANDARD_DRUM_TRACK");
+    //   var inst_number = midi_json["tracks"][TRACK_COUNT]["instrument"];
+    //   inst = REV_INST_MAP[inst_number + 128*isDrum];
 
-      var features = midi_json["tracks"][TRACK_COUNT]["internalFeatures"][0];
-      console.log(features);
-      density = features["noteDensityV2"];
-      min_poly = POLY_LEVELS[ features["minPolyphonyQ"] + 1];
-      max_poly = POLY_LEVELS[ features["maxPolyphonyQ"] + 1];
-      min_dur = DUR_LEVELS[ features["minNoteDurationQ"] + 1];
-      max_dur = DUR_LEVELS[ features["maxNoteDurationQ"] + 1];
-    }
-    console.log(min_poly, max_poly);
-    $("#inst_" + track_id + "-mo")[0].MDCSelect.value = inst;
-    $("#poly_min_" + track_id + "-mo")[0].MDCSelect.value = min_poly;
-    $("#poly_max_" + track_id + "-mo")[0].MDCSelect.value = max_poly;
-    $("#dur_min_" + track_id + "-mo")[0].MDCSelect.value = min_dur;
-    $("#dur_max_" + track_id + "-mo")[0].MDCSelect.value = max_dur;
-    $("#density-slider_" + track_id + "-slo")[0].MDCSlider.value = density;
-    $("#density_" + track_id + "-so").trigger("click");
+    //   var features = midi_json["tracks"][TRACK_COUNT]["internalFeatures"][0];
+    //   console.log(features);
+    //   density = features["noteDensityV2"];
+    //   min_poly = POLY_LEVELS[ features["minPolyphonyQ"] + 1];
+    //   max_poly = POLY_LEVELS[ features["maxPolyphonyQ"] + 1];
+    //   min_dur = DUR_LEVELS[ features["minNoteDurationQ"] + 1];
+    //   max_dur = DUR_LEVELS[ features["maxNoteDurationQ"] + 1];
+    // }
+    // console.log(min_poly, max_poly);
+    // $("#inst_" + track_id + "-mo")[0].MDCSelect.value = inst;
+    // $("#poly_min_" + track_id + "-mo")[0].MDCSelect.value = min_poly;
+    // $("#poly_max_" + track_id + "-mo")[0].MDCSelect.value = max_poly;
+    // $("#dur_min_" + track_id + "-mo")[0].MDCSelect.value = min_dur;
+    // $("#dur_max_" + track_id + "-mo")[0].MDCSelect.value = max_dur;
+    // $("#density-slider_" + track_id + "-slo")[0].MDCSlider.value = density;
+    // $("#density_" + track_id + "-so").trigger("click");
 
-    if (typeof midi_json === 'undefined') {
-      resample_button = $("#resample_" + track_id + "-so");
-      resample_button[0].MDCSwitch.checked = true;
-      resample_button.trigger("click");
-    }
+    // if (typeof midi_json === 'undefined') {
+    //   resample_button = $("#resample_" + track_id + "-so");
+    //   resample_button[0].MDCSwitch.checked = true;
+    //   resample_button.trigger("click");
+    // }
 
     TRACK_COUNT++;
   }
@@ -696,14 +696,14 @@
 
 
   function start_up() {
-    build_hyperparam_controls();
+    // build_hyperparam_controls();
     build_track();
-    build_drag_select();
+    // build_drag_select();
 
     // initialize the snackbar
-    var MDCSnackbar = mdc.snackbar.MDCSnackbar;
-    var el = document.getElementById("snackbar");
-    SNACKBAR = new MDCSnackbar(el);
+    // var MDCSnackbar = mdc.snackbar.MDCSnackbar;
+    // var el = document.getElementById("snackbar");
+    // SNACKBAR = new MDCSnackbar(el);
   }
 
   document.addEventListener("DOMContentLoaded", function(event) {
