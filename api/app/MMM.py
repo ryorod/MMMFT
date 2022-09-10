@@ -4,6 +4,7 @@ import re
 import base64
 import json
 from typing import List
+from boto3 import Session
 import mmm_api as mmm
 from midi2audio import FluidSynth
 # from IPython.display import display, Javascript
@@ -14,6 +15,9 @@ REV_INST_MAP = {0: 'acoustic_grand_piano', 1: 'bright_acoustic_piano', 2: 'elect
 POLY_LEVELS = ["any", "one", "two", "three", "four", "five", "six"]
 DUR_LEVELS = ["any", "thirty_second", "sixteenth", "eighth", "quarter", "half", "whole"]
 CURRENT_NUM_BARS = 16
+
+BUCKET_NAME = 'mmmft'
+MIDI_JSON_FILENAME = 'current_midi.json'
 
 class MMM:
     def __init__(self, hash: str):
@@ -28,13 +32,19 @@ class MMM:
 
     def get_current_midi(self):
         # TODO: Get current_midi.json from S3
-        with open("current_midi.json", "r") as f:
+        with open(MIDI_JSON_FILENAME, "r") as f:
             return json.load(f)
 
-    def save_current_midi(self, midi_json):
-        # TODO: Save current_midi.json to S3
-        with open("current_midi.json", "w") as f:
+    def save_current_midi(self, midi_json, is_generate: bool = False):
+        # TODO: Save .mid and .wav to S3
+        with open(MIDI_JSON_FILENAME, "w") as f:
             json.dump(midi_json, f)
+        sess = Session()
+        s3 = sess.client('s3')
+        s3.upload_file(f'/{self.hash}/{MIDI_JSON_FILENAME}', BUCKET_NAME, MIDI_JSON_FILENAME)
+
+        if is_generate:
+            pass
 
     def generate_callback(self, instruments: List[str]):
         status = self.get_status(instruments=instruments)
