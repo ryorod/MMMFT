@@ -127,3 +127,13 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+#####
+libtorch/
+model.pt
+MMM_API/
+font.sf2
+current_midi.json
+current.mid
+current.wav
