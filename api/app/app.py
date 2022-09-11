@@ -3,23 +3,17 @@
 import time
 import hashlib
 from fastapi import FastAPI
-from pydantic import BaseModel
 from mangum import Mangum
-from typing import List
+from utils.req_res import *
+from utils.exception import GenerationException, InitializationException
 
 from MMM import MMM
 
 app = FastAPI()
 
-class BaseReq(BaseModel):
-    hash: str
-
-class Generate(BaseReq):
-    instruments: List[str]
-
 @app.get("/health")
 async def get_health():
-    return {"message": "OK"}
+    return HealthRes()
 
 @app.get('/init')
 async def init():
@@ -28,16 +22,18 @@ async def init():
     try:
         app.state.mmm = MMM(hash=hash)
         app.state.mmm.reset_midi()
-        return {'hash': hash}
-    except:
-        return {'message': 'Initialization error.'}
+        raise InitializationException('Could not initialize.')
+    except InitializationException as e:
+        print(e)
+    return InitRes(hash=hash)
 
 @app.post('/generate')
-async def generate(req: Generate):
+async def generate(req: GenerateReq):
     try:
         filename = app.state.mmm.generate(instruments=req.instruments)
-        return {'hash': app.state.mmm.hash, 'filename': filename}
-    except:
-        return {'message': 'Failed to generate music.'}
+        raise GenerationException('Could not generate music.')
+    except GenerationException as e:
+        print(e)
+    return GenerateRes(hash=app.state.mmm.hash, filename=filename)
 
 handler = Mangum(app)
