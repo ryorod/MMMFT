@@ -35,7 +35,7 @@ RUN wget -O model.pt http://vault.sfu.ca/index.php/s/Ff2j19IrKS5R969/download
 WORKDIR ${APP_DIR}/MMM_API
 
 # installing mmm-api (takes a few minutes)
-RUN ["/bin/bash", "-c", "bash build_python.sh --linux"]
+RUN ["/bin/bash", "-c", "bash build_python_google.sh --linux"]
 WORKDIR ${APP_DIR}/MMM_API/python
 RUN pip install .
 
