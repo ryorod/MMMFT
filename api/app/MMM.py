@@ -16,9 +16,12 @@ class MMM:
     def get_current_midi(self):
         sess = Session()
         s3 = sess.client('s3')
-        res = s3.get_object(Bucket=BUCKET_NAME, Key=MIDI_JSON_FILENAME)
-        body = res['Body'].read()
-        return json.loads(body.decode('utf-8'))
+        try:
+            res = s3.get_object(Bucket=BUCKET_NAME, Key=f'/{self.hash}/{MIDI_JSON_FILENAME}')
+            body = res['Body'].read()
+            return json.loads(body.decode('utf-8'))
+        except:
+            return json.loads(r'{}')
 
     def save_current_midi(self, midi_json):
         with open(MIDI_JSON_FILENAME, "w") as f:
