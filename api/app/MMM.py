@@ -75,7 +75,7 @@ class MMM:
             "polyphony_hard_limit": 6,
             "shuffle": status.pop("shuffle"),
             "verbose": False,
-            "ckpt": "/home/app/model.pt"
+            "ckpt": "/home/jeffe/model.pt"
         }
 
         # format status

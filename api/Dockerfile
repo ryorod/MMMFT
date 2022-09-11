@@ -2,7 +2,7 @@
 # https://www.medi-08-data-06.work/entry/machine-learning-api
 
 FROM python:3.8-buster AS builder
-ARG APP_DIR="/home/app"
+ARG APP_DIR="/home/jeffe"
 
 COPY requirements.txt .
 RUN pip install awslambdaric && \
@@ -35,7 +35,7 @@ RUN wget -O model.pt http://vault.sfu.ca/index.php/s/Ff2j19IrKS5R969/download
 WORKDIR ${APP_DIR}/MMM_API
 
 # installing mmm-api (takes a few minutes)
-RUN ["/bin/bash", "-c", "bash build_python_google.sh --google"]
+RUN ["/bin/bash", "-c", "bash build_python.sh --linux"]
 WORKDIR ${APP_DIR}/MMM_API/python
 RUN pip install .
 
@@ -48,7 +48,7 @@ RUN pip install pyFluidSynth && \
 WORKDIR /
 
 FROM python:3.8-slim-buster
-ARG APP_DIR="/home/app"
+ARG APP_DIR="/home/jeffe"
 
 COPY app/* ${APP_DIR}/
 WORKDIR ${APP_DIR}
