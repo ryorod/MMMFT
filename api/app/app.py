@@ -11,10 +11,10 @@ from MMM import MMM
 
 app = FastAPI()
 
-class BaseBody(BaseModel):
+class BaseReq(BaseModel):
     hash: str
 
-class Generate(BaseBody):
+class Generate(BaseReq):
     instruments: List[str]
 
 @app.get("/health")
@@ -26,18 +26,17 @@ async def init():
     ut = str(time.time())
     hash = hashlib.sha256(ut.encode()).hexdigest()
     try:
-        mmm = MMM(hash=hash)
-        mmm.reset_midi()
+        app.state.mmm = MMM(hash=hash)
+        app.state.mmm.reset_midi()
         return {'hash': hash}
     except:
         return {'message': 'Initialization error.'}
 
 @app.post('/generate')
-async def generate(body: Generate):
+async def generate(req: Generate):
     try:
-        mmm = MMM(hash=body.hash)
-        filename = mmm.generate(instruments=body.instruments)
-        return {'hash': body.hash, 'filename': filename}
+        filename = app.state.mmm.generate(instruments=req.instruments)
+        return {'hash': app.state.mmm.hash, 'filename': filename}
     except:
         return {'message': 'Failed to generate music.'}
 
