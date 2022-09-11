@@ -2,7 +2,8 @@
 
 import time
 import hashlib
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from mangum import Mangum
 from utils.req_res import *
 from utils.exception import GenerationException, InitializationException
@@ -11,6 +12,8 @@ from MMM import MMM
 
 app = FastAPI()
 
+
+# GET
 @app.get("/health")
 async def get_health():
     return HealthRes()
@@ -22,18 +25,34 @@ async def init():
     try:
         app.state.mmm = MMM(hash=hash)
         app.state.mmm.reset_midi()
-        raise InitializationException('Could not initialize.')
     except InitializationException as e:
         print(e)
     return InitRes(hash=hash)
 
+
+# POST
 @app.post('/generate')
 async def generate(req: GenerateReq):
     try:
         filename = app.state.mmm.generate(instruments=req.instruments)
-        raise GenerationException('Could not generate music.')
     except GenerationException as e:
         print(e)
     return GenerateRes(hash=app.state.mmm.hash, filename=filename)
 
+
+# Exception
+@app.exception_handler(Exception)
+async def unknown_exception_handler(request: Request, exc: Exception):
+    return JSONResponse(status_code=500, content={'message': 'Internal error.'})
+
+@app.exception_handler(InitializationException)
+async def initialization_exception_handler(request: Request, exc: InitializationException):
+    return JSONResponse(status_code=400, content={'message': 'Initialization error.'})
+
+@app.exception_handler(GenerationException)
+async def generation_exception_handler(request: Request, exc: GenerationException):
+    return JSONResponse(status_code=400, content={'message': 'Failed to generate music.'})
+
+
+# Mangum
 handler = Mangum(app)
