@@ -1,5 +1,6 @@
 # https://colab.research.google.com/drive/10ZAdEwHDbL1lVcUGeCdj9FxXnQSNFSH4?usp=sharing
 # https://www.medi-08-data-06.work/entry/machine-learning-api
+# https://qiita.com/yohei7328/items/df7ebaa4544621e16c2b
 
 FROM python:3.8-buster AS builder
 ARG APP_DIR="/home/jeffe"
@@ -50,8 +51,14 @@ WORKDIR /
 FROM python:3.8-slim-buster
 ARG APP_DIR="/home/jeffe"
 
+# for local
+ADD https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie /usr/bin/aws-lambda-rie
+RUN chmod 755 /usr/bin/aws-lambda-rie
+COPY entry.sh "/entry.sh"
+RUN chmod 755 /entry.sh
+
 COPY app/* ${APP_DIR}/
 WORKDIR ${APP_DIR}
-COPY --from=builder  /usr/local/lib/python3.8/site-packages /usr/local/lib/python3.8/site-packages/
-ENTRYPOINT [ "/usr/local/bin/python", "-m", "awslambdaric" ]
+COPY --from=builder /usr/local/lib/python3.8/site-packages /usr/local/lib/python3.8/site-packages/
+ENTRYPOINT [ "/bin/bash", "/entry.sh" ]
 CMD [ "app.handler" ]
