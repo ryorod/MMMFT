@@ -63,6 +63,8 @@ COPY --from=builder /usr/local/lib/python3.8/site-packages /usr/local/lib/python
 COPY --from=builder ${APP_DIR}/MMM_API ${APP_DIR}/MMM_API/
 COPY --from=builder ${APP_DIR}/libtorch ${APP_DIR}/libtorch/
 COPY --from=builder ${APP_DIR}/model.pt ${APP_DIR}/
+COPY --from=builder /usr/lib/x86_64-linux-gnu/libprotobuf.so /usr/lib/x86_64-linux-gnu/libprotobuf.so
+
 WORKDIR ${APP_DIR}
 ENTRYPOINT [ "/bin/bash", "/entry.sh" ]
 CMD [ "app.handler" ]
