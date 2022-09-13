@@ -57,8 +57,12 @@ RUN chmod 755 /usr/bin/aws-lambda-rie
 COPY entry.sh "/entry.sh"
 RUN chmod 755 /entry.sh
 
-COPY app/* ${APP_DIR}/
-WORKDIR ${APP_DIR}
+COPY app/app.py app/MMM.py ${APP_DIR}/
+COPY app/utils ${APP_DIR}/utils/
 COPY --from=builder /usr/local/lib/python3.8/site-packages /usr/local/lib/python3.8/site-packages/
+COPY --from=builder ${APP_DIR}/MMM_API ${APP_DIR}/MMM_API/
+COPY --from=builder ${APP_DIR}/libtorch ${APP_DIR}/libtorch/
+COPY --from=builder ${APP_DIR}/model.pt ${APP_DIR}/
+WORKDIR ${APP_DIR}
 ENTRYPOINT [ "/bin/bash", "/entry.sh" ]
 CMD [ "app.handler" ]
