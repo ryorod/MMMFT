@@ -48,6 +48,7 @@ RUN pip install pyFluidSynth && \
 
 WORKDIR /
 
+# multi-stage build
 FROM python:3.8-slim-buster
 ARG APP_DIR="/home/jeffe"
 
