@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  mmmft:
+    image: mmmft
+    container_name: mmmft
+    volumes:
+      - ../app:/home/jeffe
+    build:
+      context: ..
+      dockerfile: .docker/Dockerfile
+    ports:
+      - 9000:8080
