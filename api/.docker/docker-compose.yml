@@ -4,8 +4,6 @@ services:
   mmmft:
     image: mmmft
     container_name: mmmft
-    volumes:
-      - ../app:/home/jeffe
     build:
       context: ..
       dockerfile: .docker/Dockerfile
