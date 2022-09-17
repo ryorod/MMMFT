@@ -5,12 +5,21 @@ import hashlib
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from mangum import Mangum
+from starlette.middleware.cors import CORSMiddleware
 from utils.req_res import *
 from utils.exception import GenerationException, InitializationException
 
 from MMM import MMM
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 
 # GET
