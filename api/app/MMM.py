@@ -17,7 +17,7 @@ class MMM:
         sess = Session()
         s3 = sess.client('s3')
         try:
-            res = s3.get_object(Bucket=BUCKET_NAME, Key=f'/{self.hash}/{MIDI_JSON_FILENAME}')
+            res = s3.get_object(Bucket=BUCKET_NAME, Key=f'{self.hash}/{MIDI_JSON_FILENAME}')
             body = res['Body'].read()
             return json.loads(body.decode('utf-8'))
         except:
@@ -28,7 +28,7 @@ class MMM:
             json.dump(midi_json, f)
         sess = Session()
         s3 = sess.client('s3')
-        s3.upload_file(MIDI_JSON_FILENAME, BUCKET_NAME, f'/{self.hash}/{MIDI_JSON_FILENAME}')
+        s3.upload_file(MIDI_JSON_FILENAME, BUCKET_NAME, f'{self.hash}/{MIDI_JSON_FILENAME}')
         return s3
 
     def generate(self, instruments: List[str]):
@@ -159,11 +159,11 @@ class MMM:
         filename = all_inst + '__' + datetime_num
 
         # upload .mid
-        s3_client.upload_file('current.mid', BUCKET_NAME, f'/{self.hash}/{filename}.mid')
+        s3_client.upload_file('current.mid', BUCKET_NAME, f'{self.hash}/{filename}.mid')
 
         # upload .wav
         FluidSynth("font.sf2").midi_to_audio('current.mid', 'current.wav')
-        s3_client.upload_file('current.wav', BUCKET_NAME, f'/{self.hash}/{filename}.wav')
+        s3_client.upload_file('current.wav', BUCKET_NAME, f'{self.hash}/{filename}.wav')
 
         return filename
 
