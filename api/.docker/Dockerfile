@@ -50,6 +50,7 @@ WORKDIR /
 
 # multi-stage build
 FROM python:3.8-slim-buster
+# FROM nvidia/cuda:11.1.1-devel-ubuntu18.04
 ARG APP_DIR="/home/jeffe"
 
 # for local
@@ -64,6 +65,7 @@ COPY --from=builder /usr/local/lib/python3.8/site-packages /usr/local/lib/python
 COPY --from=builder ${APP_DIR}/MMM_API ${APP_DIR}/MMM_API/
 COPY --from=builder ${APP_DIR}/libtorch ${APP_DIR}/libtorch/
 COPY --from=builder ${APP_DIR}/model.pt ${APP_DIR}/
+COPY --from=builder /usr/lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu/
 
 WORKDIR ${APP_DIR}
 ENTRYPOINT [ "/bin/bash", "/entry.sh" ]
