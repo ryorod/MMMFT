@@ -1,7 +1,9 @@
 boto3==1.22.9
 fastapi==0.75.2
 mangum==0.15.0
+nest-asyncio==1.5.5
 pydantic==1.9.0
+pyngrok==5.1.0
 starlette==0.17.1
 typing_extensions==4.2.0
 uvicorn==0.17.6
